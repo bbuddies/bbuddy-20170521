@@ -7,10 +7,12 @@
         </tr>
         </thead>
         <tbody class="table-hover">
+        {{#budgets}}
         <tr>
-            <td class="text-left">2017-05</td>
-            <td class="text-left">1000</td>
+            <td class="text-left">{{month}}</td>
+            <td class="text-left">{{amount}}</td>
         </tr>
+        {{/budgets}}
         </tbody>
     </table>
 </div>

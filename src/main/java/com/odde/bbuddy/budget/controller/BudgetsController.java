@@ -5,6 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Arrays;
 
 @Controller
 public class BudgetsController {
@@ -15,7 +18,10 @@ public class BudgetsController {
     }
 
     @PostMapping("/budgets/add")
-    public String submitAdd(@ModelAttribute Budget budget) {
-        return "/budgets/index";
+    public ModelAndView submitAdd(@ModelAttribute Budget budget) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/budgets/index");
+        modelAndView.addObject("budgets", Arrays.asList(budget));
+        return modelAndView;
     }
 }
