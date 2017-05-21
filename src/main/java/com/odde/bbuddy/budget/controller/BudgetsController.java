@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
-
 @Controller
 public class BudgetsController {
 
@@ -29,7 +27,7 @@ public class BudgetsController {
         budgets.addBudget(budget);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/budgets/index");
-        modelAndView.addObject("budgets", Arrays.asList(budget));
+        modelAndView.addObject("budgets", budgets.getAllBudgets());
         return modelAndView;
     }
 }
