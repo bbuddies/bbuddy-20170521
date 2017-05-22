@@ -18,3 +18,7 @@ Feature: Budgets
     Then you will see all budgets as below
       | month   | amount |
       | 2017-06 | 2000   |
+
+  Scenario: Add a budget which amount is zero
+    When add budget as month "2017-05" and amount 0
+    Then you will see a message as below "The amount is invalid!"

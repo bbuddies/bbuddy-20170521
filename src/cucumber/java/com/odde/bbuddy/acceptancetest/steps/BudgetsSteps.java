@@ -49,4 +49,11 @@ public class BudgetsSteps {
         Budget budget = budgets.get(0);
         assertThat(uiDriver.getAllTextInPage()).doesNotContain(budget.getAmount());
     }
+
+
+    @Then("^you will see a message as below \"([^\"]*)\"$")
+    public void youWillSeeAMessageAsBelow(String arg0) throws Throwable {
+        assertThat(uiDriver.getAllTextInPage()).contains(arg0);
+    }
+
 }
