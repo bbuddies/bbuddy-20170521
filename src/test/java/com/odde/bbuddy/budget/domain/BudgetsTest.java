@@ -66,4 +66,19 @@ public class BudgetsTest {
 
     }
 
+    @Test
+    public void getbudgetSum(){
+        BudgetRepo mockBudgetRepo = mock(BudgetRepo.class);
+        Budgets budgets = new Budgets(mockBudgetRepo);
+        Budget budget1 = new Budget();
+        budget1.setMonth(parseMonth("2016-11"));
+        budget1.setAmount(800);
+        when(mockBudgetRepo.findAll()).thenReturn(asList(budget1));
+        budget1.setMonth(parseMonth("2017-05"));
+        budget1.setAmount(31);
+        when(mockBudgetRepo.findAll()).thenReturn(asList(budget1));
+        budgets
+    }
+
+
 }
