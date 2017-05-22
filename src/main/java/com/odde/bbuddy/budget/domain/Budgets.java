@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.List;
 
 @Component
@@ -33,7 +34,7 @@ public class Budgets {
         return budgetRepo.findAll();
     }
 
-    public int getAmountSum(String startTime, String endTime) throws ParseException {
+    public int getSum(String startTime, String endTime) throws ParseException {
         int sum = 0;
         List<Budget> budgetList = this.budgetRepo.findAll();
         for (Budget budget : budgetList) {
@@ -42,13 +43,13 @@ public class Budgets {
             int mothDay = budget.getMonth().getDayOfMonth();
             int amount = budget.getAmount();
             if (ret == 1) {
-                sum = sum + (MyMouths.MothDays[moth] - mothDay + 1)/MyMouths.MothDays[moth] * amount;
+                sum = sum + (MyMouths.MothDays[moth] - mothDay + 1) / MyMouths.MothDays[moth] * amount;
             } else if (ret == 2) {
-                sum = sum +  mothDay/MyMouths.MothDays[moth] * amount;
-            } else if (ret == 3){
-                sum= sum+ amount;
-            }else if (ret ==4){
-                sum= sum+  (getMothDayByStringFormat(endTime) - getMothDayByStringFormat(startTime)+1)/MyMouths.MothDays[moth] * amount;
+                sum = sum + mothDay / MyMouths.MothDays[moth] * amount;
+            } else if (ret == 3) {
+                sum = sum + amount;
+            } else if (ret == 4) {
+                sum = sum + (getMothDayByStringFormat(endTime) - getMothDayByStringFormat(startTime) + 1) / MyMouths.MothDays[moth] * amount;
             }
         }
         return 0;
