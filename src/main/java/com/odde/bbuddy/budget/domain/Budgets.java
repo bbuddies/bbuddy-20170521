@@ -5,6 +5,7 @@ import com.odde.bbuddy.budget.repo.BudgetRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -29,5 +30,9 @@ public class Budgets {
 
     public List<Budget> getAllBudgets() {
         return budgetRepo.findAll();
+    }
+
+    public int getSum(String startDate, String endDate) {
+        return 0;
     }
 }

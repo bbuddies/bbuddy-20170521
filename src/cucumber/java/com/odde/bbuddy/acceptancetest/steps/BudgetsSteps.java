@@ -28,8 +28,8 @@ public class BudgetsSteps {
     @Then("^you will see all budgets as below$")
     public void you_will_see_all_budgets_as_below(List<Budget> budgets) throws Throwable {
         Budget budget = budgets.get(0);
-        assertThat(uiDriver.getAllTextInPage()).contains(budget.getMonth());
         assertThat(uiDriver.getAllTextInPage()).contains(budget.getAmount());
+        assertThat(uiDriver.getAllTextInPage()).contains(budget.getMonth());
     }
 
     @Given("^exists the following budget$")
@@ -56,4 +56,25 @@ public class BudgetsSteps {
         assertThat(uiDriver.getAllTextInPage()).contains(arg0);
     }
 
+    @Given("^exists the following budgets$")
+    public void existsTheFollowingBudgets(List<Budget> budgets) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        for (Budget budget: budgets
+             ) {
+            add_budget_as_month_and_amount(budget.getMonth(), Integer.parseInt(budget.getAmount()));
+        }
+    }
+
+    @When("^specify startDate \"([^\"]*)\" and endDate \"([^\"]*)\"$")
+    public void specifyStartDateAndEndDate(String startDate, String endDate) throws Throwable {
+        uiDriver.navigateTo("/budgets/sum");
+        uiDriver.inputTextByName(startDate, "startDate");
+        uiDriver.inputTextByName(endDate, "endDate");
+        uiDriver.clickByText("sum");
+    }
+
+    @Then("^you will see the sum (\\d+)$")
+    public void youWillSeeTheSum(int arg0) throws Throwable {
+        assertThat(uiDriver.getAllTextInPage()).contains(Integer.toString(arg0));
+    }
 }
