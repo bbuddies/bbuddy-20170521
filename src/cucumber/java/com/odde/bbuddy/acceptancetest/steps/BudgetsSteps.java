@@ -47,6 +47,6 @@ public class BudgetsSteps {
     public void youWillNotSeeTheExistingFollowingBudget(List<Budget> budgets) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         Budget budget = budgets.get(0);
-        assertThat(uiDriver.getAllTextInPage()).doesNotContain(budget.getMonth());
+        assertThat(uiDriver.getAllTextInPage()).doesNotContain(budget.getAmount());
     }
 }
