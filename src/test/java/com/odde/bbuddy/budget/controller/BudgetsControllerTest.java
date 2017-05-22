@@ -16,7 +16,7 @@ public class BudgetsControllerTest {
 
     Budgets mockBudgets = mock(Budgets.class);
     BudgetsController controller = new BudgetsController(mockBudgets);
-     Budget budget = new Budget() {{ setMonth(parseMonth("2017-05")); setAmount(1000);}};
+    Budget budget = new Budget() {{ setMonth(parseMonth("2017-05")); setAmount(1000);}};
 
     @Test
     public void submit_add_should_add_budget() {
@@ -35,13 +35,8 @@ public class BudgetsControllerTest {
         when(mockBudgets.getAllBudgets()).thenReturn(asList(budget));
 
         ModelAndView modelAndView = controller.submitAdd(new Budget());
-        assertThat(modelAndView.getModel().get("budgets")).isEqualToComparingFieldByField(asList(budget));
-    }
 
-    @Test
-    public void budget_should_be_valid() {
-        ModelAndView modelAndView = controller.submitAdd(new Budget(){{ setMonth(parseMonth("2017-05")); setAmount(0);}});
-        assertThat(modelAndView.getView()).withFailMessage("The amount is invalid!");
+        assertThat(modelAndView.getModel().get("budgets")).isEqualToComparingFieldByField(asList(budget));
     }
 
 }
