@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.List;
+import com.odde.bbuddy.common.Formats;
 
 @Component
 public class Budgets {
@@ -52,7 +53,7 @@ public class Budgets {
                 sum = sum + (getMothDayByStringFormat(endTime) - getMothDayByStringFormat(startTime) + 1) / MyMouths.MothDays[moth] * amount;
             }
         }
-        return 0;
+        return sum;
     }
 
 
@@ -78,13 +79,14 @@ public class Budgets {
     }
 
     private int getMothByStringFormat(String time) throws ParseException {
+
         SimpleDateFormat formatter = new SimpleDateFormat("MM");
-        return Integer.parseInt(formatter.parse(time).toString());
+        return Integer.parseInt(formatter.format(Formats.parseDayToDate(time)));
     }
 
     private int getMothDayByStringFormat(String time) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd");
-        return Integer.parseInt(formatter.parse(time).toString());
+        return Integer.parseInt(formatter.format(Formats.parseDayToDate(time)));
     }
 
 }
