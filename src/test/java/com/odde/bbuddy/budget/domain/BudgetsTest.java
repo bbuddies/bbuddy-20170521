@@ -4,6 +4,7 @@ import com.odde.bbuddy.budget.Budget;
 import com.odde.bbuddy.budget.repo.BudgetRepo;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 
 import static com.odde.bbuddy.common.Formats.parseMonth;
 import static java.util.Arrays.asList;
@@ -13,65 +14,72 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class BudgetsTest {
-    BudgetRepo mockBudgetRepo = mock(BudgetRepo.class);
-    Budgets budgets = new Budgets(mockBudgetRepo);
-    Budget budget = budget();
-
     
     @Test
     public void add_budget_should_save_budget() {
+        BudgetRepo mockBudgetRepo = mock(BudgetRepo.class);
+        Budgets budgets = new Budgets(mockBudgetRepo);
+
+        Budget budget = new Budget();
+        budget.setMonth(parseMonth("2017-05"));
+        budget.setAmount(2000);
         budgets.addBudget(budget);
 
         verify(mockBudgetRepo).save(budget);
     }
-
+    
     @Test
     public void get_all_budgets_should_find_all() {
-        givenExistsBudget(budget);
+        BudgetRepo mockBudgetRepo = mock(BudgetRepo.class);
+        Budgets budgets = new Budgets(mockBudgetRepo);
+
+        Budget budget = new Budget();
+        budget.setMonth(parseMonth("2017-05"));
+        budget.setAmount(2000);
+        when(mockBudgetRepo.findAll()).thenReturn(asList(budget));
 
         assertThat(budgets.getAllBudgets()).usingFieldByFieldElementComparator().isEqualTo(asList(budget));
     }
 
     @Test
     public void add_budget_should_replace_existing_budget() {
-        givenExistsBudget(budget(1, "2017-06", 1500));
+        BudgetRepo mockBudgetRepo = mock(BudgetRepo.class);
+        Budgets budgets = new Budgets(mockBudgetRepo);
 
-        budgets.addBudget(budget("2017-06", 2000));
+        Budget budget1 = new Budget();
+        budget1.setId(1);
+        budget1.setMonth(parseMonth("2017-06"));
+        budget1.setAmount(1500);
 
-        verifySaveBudgetCalledWithId(1);
-    }
+        //stub
+        when(mockBudgetRepo.findAll()).thenReturn(asList(budget1));
 
-    private void verifySaveBudgetCalledWithId(int expected) {
+        Budget budget2 = new Budget();
+        budget2.setMonth(parseMonth("2017-06"));
+        budget2.setAmount(2000);
+        budgets.addBudget(budget2);
+
         ArgumentCaptor<Budget> captor = ArgumentCaptor.forClass(Budget.class);
         verify(mockBudgetRepo).save(captor.capture());
-        assertThat(captor.getValue().getId()).isEqualTo(expected);
+
+        assertThat(captor.getValue().getId()).isEqualTo(1);
+
     }
 
-    private Budget budget(String month, int amount) {
-        Budget budget2 = new Budget();
-        budget2.setMonth(parseMonth(month));
-        budget2.setAmount(amount);
-        return budget2;
-    }
-
-    private void givenExistsBudget(Budget budget) {
-        when(mockBudgetRepo.findAll()).thenReturn(asList(budget));
-    }
-
-    private Budget budget(int id, String month, int amount) {
+    @Test
+    public void getbudgetSum(){
+        BudgetRepo mockBudgetRepo = mock(BudgetRepo.class);
+        Budgets budgets = new Budgets(mockBudgetRepo);
         Budget budget1 = new Budget();
-        budget1.setId(id);
-        budget1.setMonth(parseMonth(month));
-        budget1.setAmount(amount);
-        return budget1;
+        budget1.setMonth(parseMonth("2016-11"));
+        budget1.setAmount(800);
+        when(mockBudgetRepo.findAll()).thenReturn(asList(budget1));
+        budget1.setMonth(parseMonth("2017-05"));
+        budget1.setAmount(31);
+        when(mockBudgetRepo.findAll()).thenReturn(asList(budget1));
+        budgets
     }
 
-    private Budget budget() {
-        Budget budget = new Budget();
-        budget.setMonth(parseMonth("2017-05"));
-        budget.setAmount(2000);
-        return budget;
-    }
 
     @Test
     public void sum_budget_should_calculate_correct (){
