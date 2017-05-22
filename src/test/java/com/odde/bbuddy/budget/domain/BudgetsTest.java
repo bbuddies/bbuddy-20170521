@@ -73,4 +73,8 @@ public class BudgetsTest {
         return budget;
     }
 
+    @Test
+    public void sum_budget_should_calculate_correct (){
+
+    }
 }
