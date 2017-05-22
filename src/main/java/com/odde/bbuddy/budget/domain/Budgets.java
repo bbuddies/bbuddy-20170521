@@ -17,6 +17,13 @@ public class Budgets {
     }
 
     public void addBudget(Budget budget) {
+        for (Budget b : this.budgetRepo.findAll()
+                ) {
+            if (b.getMonth().equals(budget.getMonth())) {
+
+                budget.setId(b.getId());
+            }
+        }
         budgetRepo.save(budget);
     }
 
