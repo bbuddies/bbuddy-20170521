@@ -39,4 +39,25 @@ public class BudgetsTest {
         assertThat(budgets.getAllBudgets()).usingFieldByFieldElementComparator().isEqualTo(asList(budget));
     }
 
+    @Test
+    public void add_budget_should_replace_existing_budget() {
+        BudgetRepo mockBudgetRepo = mock(BudgetRepo.class);
+        Budgets budgets = new Budgets(mockBudgetRepo);
+
+        Budget budget1 = new Budget();
+        budget1.setMonth(parseMonth("2017-06"));
+        budget1.setAmount(1500);
+        budgets.addBudget(budget1);
+
+        //mockBudgetRepo.save(budget1);
+
+        Budget budget2 = new Budget();
+        budget2.setMonth(parseMonth("2017-06"));
+        budget2.setAmount(2000);
+        budgets.addBudget(budget2);
+
+        assertThat(budgets.getAllBudgets()).doesNotContain(budget1);
+
+    }
+
 }

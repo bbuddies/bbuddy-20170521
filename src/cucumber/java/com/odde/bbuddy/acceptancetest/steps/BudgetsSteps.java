@@ -2,6 +2,8 @@ package com.odde.bbuddy.acceptancetest.steps;
 
 import com.odde.bbuddy.acceptancetest.data.Budget;
 import com.odde.bbuddy.acceptancetest.driver.UiDriver;
+import cucumber.api.PendingException;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +30,23 @@ public class BudgetsSteps {
         Budget budget = budgets.get(0);
         assertThat(uiDriver.getAllTextInPage()).contains(budget.getMonth());
         assertThat(uiDriver.getAllTextInPage()).contains(budget.getAmount());
+    }
+
+    @Given("^exists the following budget$")
+    public void existsTheFollowingBudget(List<Budget> budgets) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //throw new PendingException();
+        Budget budget = budgets.get(0);
+        //2017-05,1000
+        add_budget_as_month_and_amount(budget.getMonth(), Integer.parseInt(budget.getAmount()));
+
+    }
+
+
+    @Then("^you will not see the existing following budget$")
+    public void youWillNotSeeTheExistingFollowingBudget(List<Budget> budgets) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        Budget budget = budgets.get(0);
+        assertThat(uiDriver.getAllTextInPage()).doesNotContain(budget.getMonth());
     }
 }
