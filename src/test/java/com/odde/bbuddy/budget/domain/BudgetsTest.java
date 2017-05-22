@@ -3,6 +3,8 @@ package com.odde.bbuddy.budget.domain;
 import com.odde.bbuddy.budget.Budget;
 import com.odde.bbuddy.budget.repo.BudgetRepo;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 
 import static com.odde.bbuddy.common.Formats.parseMonth;
 import static java.util.Arrays.asList;
@@ -45,18 +47,22 @@ public class BudgetsTest {
         Budgets budgets = new Budgets(mockBudgetRepo);
 
         Budget budget1 = new Budget();
+        budget1.setId(1);
         budget1.setMonth(parseMonth("2017-06"));
         budget1.setAmount(1500);
-        budgets.addBudget(budget1);
 
-        //mockBudgetRepo.save(budget1);
+        //stub
+        when(mockBudgetRepo.findAll()).thenReturn(asList(budget1));
 
         Budget budget2 = new Budget();
         budget2.setMonth(parseMonth("2017-06"));
         budget2.setAmount(2000);
         budgets.addBudget(budget2);
 
-        assertThat(budgets.getAllBudgets()).doesNotContain(budget1);
+        ArgumentCaptor<Budget> captor = ArgumentCaptor.forClass(Budget.class);
+        verify(mockBudgetRepo).save(captor.capture());
+
+        assertThat(captor.getValue().getId()).isEqualTo(1);
 
     }
 
