@@ -2,7 +2,7 @@ package com.odde.bbuddy.acceptancetest.steps;
 
 import com.odde.bbuddy.acceptancetest.data.Budget;
 import com.odde.bbuddy.acceptancetest.driver.UiDriver;
-import cucumber.api.PendingException;
+import com.odde.bbuddy.acceptancetest.pages.AddBudgetPage;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -17,12 +17,12 @@ public class BudgetsSteps {
     @Autowired
     UiDriver uiDriver;
 
+    @Autowired
+    AddBudgetPage addBudgetPage;
+
     @When("^add budget as month \"([^\"]*)\" and amount (\\d+)$")
     public void add_budget_as_month_and_amount(String month, int amount) throws Throwable {
-        uiDriver.navigateTo("/budgets/add");
-        uiDriver.inputTextByName(month, "month");
-        uiDriver.inputTextByName(String.valueOf(amount), "amount");
-        uiDriver.clickByText("Add");
+        addBudgetPage.add(month, amount);
     }
 
     @Then("^you will see all budgets as below$")
