@@ -41,16 +41,20 @@ public class Budgets {
         List<Budget> budgetList = this.budgetRepo.findAll();
         for (Budget budget : budgetList) {
             int ret = compaireMoth(budget, startTime, endTime);
-            int moth = getMothByStringFormat(budget.getMonth().toString());
-            int mothDay = budget.getMonth().getDayOfMonth();
+
             float amount = budget.getAmount();
             if (ret == 1) {
-                sum = sum + (float) (MyMouths.MothDays[moth - 1] - mothDay + 1) / amount * (float) MyMouths.MothDays[moth - 1];
+                int moth = getMothByStringFormat(startTime);
+                int mothDay = getMothDayByStringFormat(startTime);
+                sum = sum + (MyMouths.MothDays[moth - 1] - mothDay + 1) / amount *  MyMouths.MothDays[moth - 1];
             } else if (ret == 2) {
-                sum = sum + (float) (mothDay / MyMouths.MothDays[moth - 1]) * amount;
+                int moth = getMothByStringFormat(endTime);
+                int mothDay = getMothDayByStringFormat(endTime);
+                sum = sum + mothDay / amount * MyMouths.MothDays[moth - 1];
             } else if (ret == 3) {
                 sum = sum + amount;
             } else if (ret == 4) {
+                int moth = getMothByStringFormat(endTime);
                 sum = sum + (getMothDayByStringFormat(endTime) - getMothDayByStringFormat(startTime) + 1) / amount * MyMouths.MothDays[moth - 1];
             }
         }
