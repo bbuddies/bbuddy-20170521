@@ -53,6 +53,13 @@ public class BudgetsSummaryTest {
 
         assertThat(budgets.getSum("2017-05-10", "2017-07-15")).isEqualTo(37);
     }
+    
+    @Test
+    public void acceptance_test() throws ParseException {
+        givenExistingBudgets(budget("2017-05", 310), budget("2017-07", 310), budget("2017-08", 310));
+
+        assertThat(budgets.getSum("2017-05-10", "2017-07-15")).isEqualTo(370);
+    }
 
     private Budget budget(String month, int amount) {
         Budget budget = new Budget();
