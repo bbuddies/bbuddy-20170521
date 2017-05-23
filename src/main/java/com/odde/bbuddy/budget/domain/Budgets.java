@@ -40,47 +40,30 @@ public class Budgets {
         float sum = 0f;
         List<Budget> budgetList = this.budgetRepo.findAll();
         for (Budget budget : budgetList) {
-            int ret = compaireMoth(budget, startTime, endTime);
+
+            int targetMonth = budget.getMonth().getMonthValue();
 
             float amount = budget.getAmount();
-            if (ret == 1) {
+            //4 在起始月结束之间，且开始月份等于结束月份
+            if (targetMonth == getMonthByStringFormat(startTime) && targetMonth == getMonthByStringFormat(endTime)) {
+                int month = getMonthByStringFormat(endTime);
+                sum = sum + (getMonthDayByStringFormat(endTime) - getMonthDayByStringFormat(startTime) + 1) / amount * MyMonths.MONTH_DAYS[month - 1];
+            } //1 等于起始月份，
+             else if (targetMonth == getMonthByStringFormat(startTime)) {
                 int month = getMonthByStringFormat(startTime);
                 int monthDay = getMonthDayByStringFormat(startTime);
                 sum = sum + (MyMonths.MONTH_DAYS[month - 1] - monthDay + 1) / amount *  MyMonths.MONTH_DAYS[month - 1];
-            } else if (ret == 2) {
+            } //2 等于结束月份，
+             else if (targetMonth == getMonthByStringFormat(endTime)) {
                 int month = getMonthByStringFormat(endTime);
                 int monthDay = getMonthDayByStringFormat(endTime);
                 sum = sum + monthDay / amount * MyMonths.MONTH_DAYS[month - 1];
-            } else if (ret == 3) {
+            } //3 在起始月结束之间 且开始月份不等于结束月份
+             else if (targetMonth > getMonthByStringFormat(startTime) && targetMonth < getMonthByStringFormat(endTime)) {
                 sum = sum + amount;
-            } else if (ret == 4) {
-                int month = getMonthByStringFormat(endTime);
-                sum = sum + (getMonthDayByStringFormat(endTime) - getMonthDayByStringFormat(startTime) + 1) / amount * MyMonths.MONTH_DAYS[month - 1];
-            }
+            };
         }
         return sum;
-    }
-
-
-    /**
-     * @param budget    用来比较的月份
-     * @param startTime 起始月份
-     * @param endTime   结束月份
-     * @return 0 不在时间之内，1 等于起始月份，2 等于结束月份， 3 在起始月结束之间 且开始月份不等于结束月份,4 在起始月结束之间，且开始月份等于结束月份
-     */
-    private int compaireMoth(Budget budget, String startTime, String endTime) throws ParseException {
-        int targetMonth = budget.getMonth().getMonthValue();
-        if (targetMonth == getMonthByStringFormat(startTime) && targetMonth == getMonthByStringFormat(endTime)) {
-            return 4;
-        } else if (targetMonth == getMonthByStringFormat(startTime)) {
-            return 1;
-        } else if (targetMonth == getMonthByStringFormat(endTime)) {
-            return 2;
-        } else if (targetMonth > getMonthByStringFormat(startTime) && targetMonth < getMonthByStringFormat(endTime)) {
-            return 3;
-        } else {
-            return 0;
-        }
     }
 
     private int getMonthByStringFormat(String time) throws ParseException {
