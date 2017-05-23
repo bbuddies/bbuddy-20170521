@@ -2,7 +2,7 @@ package com.odde.bbuddy.budget.domain;
 
 import com.odde.bbuddy.budget.Budget;
 import com.odde.bbuddy.budget.repo.BudgetRepo;
-import com.odde.bbuddy.common.utils.MyMouths;
+import com.odde.bbuddy.common.utils.MyMonths;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,18 +44,18 @@ public class Budgets {
 
             float amount = budget.getAmount();
             if (ret == 1) {
-                int moth = getMothByStringFormat(startTime);
-                int mothDay = getMothDayByStringFormat(startTime);
-                sum = sum + (MyMouths.MothDays[moth - 1] - mothDay + 1) / amount *  MyMouths.MothDays[moth - 1];
+                int month = getMonthByStringFormat(startTime);
+                int monthDay = getMonthDayByStringFormat(startTime);
+                sum = sum + (MyMonths.MONTH_DAYS[month - 1] - monthDay + 1) / amount *  MyMonths.MONTH_DAYS[month - 1];
             } else if (ret == 2) {
-                int moth = getMothByStringFormat(endTime);
-                int mothDay = getMothDayByStringFormat(endTime);
-                sum = sum + mothDay / amount * MyMouths.MothDays[moth - 1];
+                int month = getMonthByStringFormat(endTime);
+                int monthDay = getMonthDayByStringFormat(endTime);
+                sum = sum + monthDay / amount * MyMonths.MONTH_DAYS[month - 1];
             } else if (ret == 3) {
                 sum = sum + amount;
             } else if (ret == 4) {
-                int moth = getMothByStringFormat(endTime);
-                sum = sum + (getMothDayByStringFormat(endTime) - getMothDayByStringFormat(startTime) + 1) / amount * MyMouths.MothDays[moth - 1];
+                int month = getMonthByStringFormat(endTime);
+                sum = sum + (getMonthDayByStringFormat(endTime) - getMonthDayByStringFormat(startTime) + 1) / amount * MyMonths.MONTH_DAYS[month - 1];
             }
         }
         return sum;
@@ -69,27 +69,27 @@ public class Budgets {
      * @return 0 不在时间之内，1 等于起始月份，2 等于结束月份， 3 在起始月结束之间 且开始月份不等于结束月份,4 在起始月结束之间，且开始月份等于结束月份
      */
     private int compaireMoth(Budget budget, String startTime, String endTime) throws ParseException {
-        int tagetmoth = budget.getMonth().getMonthValue();
-        if (tagetmoth == getMothByStringFormat(startTime) && tagetmoth == getMothByStringFormat(endTime)) {
+        int targetMonth = budget.getMonth().getMonthValue();
+        if (targetMonth == getMonthByStringFormat(startTime) && targetMonth == getMonthByStringFormat(endTime)) {
             return 4;
-        } else if (tagetmoth == getMothByStringFormat(startTime)) {
+        } else if (targetMonth == getMonthByStringFormat(startTime)) {
             return 1;
-        } else if (tagetmoth == getMothByStringFormat(endTime)) {
+        } else if (targetMonth == getMonthByStringFormat(endTime)) {
             return 2;
-        } else if (tagetmoth > getMothByStringFormat(startTime) && tagetmoth < getMothByStringFormat(endTime)) {
+        } else if (targetMonth > getMonthByStringFormat(startTime) && targetMonth < getMonthByStringFormat(endTime)) {
             return 3;
         } else {
             return 0;
         }
     }
 
-    private int getMothByStringFormat(String time) throws ParseException {
+    private int getMonthByStringFormat(String time) throws ParseException {
 
         SimpleDateFormat formatter = new SimpleDateFormat("MM");
         return Integer.parseInt(formatter.format(Formats.parseDayToDate(time)));
     }
 
-    private int getMothDayByStringFormat(String time) throws ParseException {
+    private int getMonthDayByStringFormat(String time) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd");
         return Integer.parseInt(formatter.format(Formats.parseDayToDate(time)));
     }
