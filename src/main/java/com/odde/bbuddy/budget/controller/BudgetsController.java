@@ -45,7 +45,7 @@ public class BudgetsController {
     public ModelAndView getSum(String startDate, String endDate) throws ParseException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/budgets/sum");
-        modelAndView.addObject("sum",budgets.getSum(startDate,endDate));
+        modelAndView.addObject("sum",String.valueOf(budgets.getSum(startDate,endDate)));
         return modelAndView;
     }
 }
