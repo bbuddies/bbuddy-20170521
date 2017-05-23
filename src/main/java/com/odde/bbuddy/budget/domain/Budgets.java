@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.List;
+
 import com.odde.bbuddy.common.Formats;
 
 @Component
@@ -35,22 +36,22 @@ public class Budgets {
         return budgetRepo.findAll();
     }
 
-    public int getSum(String startTime, String endTime) throws ParseException {
-        int sum = 0;
+    public float getSum(String startTime, String endTime) throws ParseException {
+        float sum = 0f;
         List<Budget> budgetList = this.budgetRepo.findAll();
         for (Budget budget : budgetList) {
             int ret = compaireMoth(budget, startTime, endTime);
             int moth = getMothByStringFormat(budget.getMonth().toString());
             int mothDay = budget.getMonth().getDayOfMonth();
-            int amount = budget.getAmount();
+            float amount = budget.getAmount();
             if (ret == 1) {
-                sum = sum + (MyMouths.MothDays[moth] - mothDay + 1) / MyMouths.MothDays[moth] * amount;
+                sum = sum + (float) (MyMouths.MothDays[moth - 1] - mothDay + 1) / amount * (float) MyMouths.MothDays[moth - 1];
             } else if (ret == 2) {
-                sum = sum + mothDay / MyMouths.MothDays[moth] * amount;
+                sum = sum + (float) (mothDay / MyMouths.MothDays[moth - 1]) * amount;
             } else if (ret == 3) {
                 sum = sum + amount;
             } else if (ret == 4) {
-                sum = sum + (getMothDayByStringFormat(endTime) - getMothDayByStringFormat(startTime) + 1) / MyMouths.MothDays[moth] * amount;
+                sum = sum + (getMothDayByStringFormat(endTime) - getMothDayByStringFormat(startTime) + 1) / amount * MyMouths.MothDays[moth - 1];
             }
         }
         return sum;
