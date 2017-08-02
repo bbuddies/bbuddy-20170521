@@ -2,12 +2,12 @@ package com.odde.bbuddy.budget.controller;
 
 import com.odde.bbuddy.budget.domain.Budgets;
 import com.odde.bbuddy.budget.repo.Budget;
-import com.odde.bbuddy.budget.repo.BudgetRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
@@ -33,7 +33,10 @@ public class BudgetController {
     }
 
     @GetMapping
-    public String index(){
-        return "budgets/index";
+    public ModelAndView index(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("budgets/index");
+        modelAndView.getModel().put("budgets", budgets.getAll());
+        return modelAndView;
     }
 }
