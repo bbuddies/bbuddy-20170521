@@ -14,11 +14,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class BudgetControllerTest {
+    Budgets budgets = mock(Budgets.class);
+    BudgetController controller = new BudgetController(budgets);
+
     @Test
     public void save_budget() throws Exception {
         Budget budget = new Budget();
-        Budgets budgets = mock(Budgets.class);
-        BudgetController controller = new BudgetController(budgets);
 
         controller.save(budget);
 
@@ -28,9 +29,7 @@ public class BudgetControllerTest {
     @Test
     public void get_budgets_list() throws Exception {
         List<Budget> budgetList = Arrays.asList(new Budget());
-        Budgets budgets = mock(Budgets.class);
         when(budgets.getAll()).thenReturn(budgetList);
-        BudgetController controller = new BudgetController(budgets);
 
         ModelAndView result = controller.index();
 
