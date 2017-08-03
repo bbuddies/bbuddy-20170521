@@ -8,9 +8,8 @@ import org.junit.Test;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -47,17 +46,15 @@ public class BudgetControllerTest {
 
     @Test
     public void search_budget() throws Exception {
-        BigDecimal total;
+        BigDecimal total = getTotalBudget("2017-12-01", "2017-12-10");
+        assertEquals(BigDecimal.valueOf(1000.0), total);
+    }
 
-        String startDate = "2017-12-01";
-        String endDate = "2017-12-01";
+    @Test
+    public void search_budget_out_of_date() throws Exception {
+        BigDecimal total = getTotalBudget("2017-11-01", "2017-11-10");
 
-        Budget budget = new Budget();
-        budget.setMonth("2017-12");
-        budget.setAmount(3100);
-
-        total = controller.getBudgetInDate(startDate, endDate, budget);
-        assertEquals(BigDecimal.valueOf(100.0), total);
+        assertEquals(BigDecimal.valueOf(0), total);
     }
 
     @Test
@@ -101,5 +98,14 @@ public class BudgetControllerTest {
         budget.setAmount(amount);
         budget.setMonth(month);
         return Arrays.asList(budget);
+    }
+
+    private BigDecimal getTotalBudget(String startDate,
+                                      String endDate) throws ParseException {
+        Budget budget = new Budget();
+        budget.setMonth("2017-12");
+        budget.setAmount(3100);
+
+        return controller.getBudgetInDate(startDate, endDate, budget);
     }
 }

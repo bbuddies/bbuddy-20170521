@@ -56,7 +56,7 @@ public class BudgetController {
                                String endDate) throws ParseException {
         ModelAndView modelAndView = getModelAndView("budgets/search");
 
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal total = new BigDecimal(0);
         List<Budget> budgets = this.budgets.getAll();
 
         for (Budget budget : budgets) {
@@ -76,7 +76,7 @@ public class BudgetController {
         format1.setLenient(false);
         Calendar c = Calendar.getInstance();
 
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal total = new BigDecimal(0);
         String month = budget.getMonth() + "-01"; // 2017-12
         Integer amount = budget.getAmount();
 
