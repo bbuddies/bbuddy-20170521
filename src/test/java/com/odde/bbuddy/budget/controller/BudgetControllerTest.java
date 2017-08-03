@@ -42,8 +42,8 @@ public class BudgetControllerTest {
     @Test
     public void get_budgets_list() throws Exception {
 
-        when(budgets.getAll()).thenReturn(Budgets(1000, "2017-10"));
-        BudgetInView budgetsInView = BudgetsInView("TWD 1,000.00", "2017-10");
+        when(budgets.getAll()).thenReturn(budgets(1000, "2017-10"));
+        BudgetInView budgetsInView = budgetsInView("TWD 1,000.00", "2017-10");
 
         ModelAndView result = controller.index();
 
@@ -61,14 +61,14 @@ public class BudgetControllerTest {
         return budget;
     }
 
-    private BudgetInView BudgetsInView(String amount, String month) {
+    private BudgetInView budgetsInView(String amount, String month) {
         BudgetInView budgetInView = new BudgetInView();
         budgetInView.setAmount(amount);
         budgetInView.setMonth(month);
         return budgetInView;
     }
 
-    private List<Budget> Budgets(int amount, String month) {
+    private List<Budget> budgets(int amount, String month) {
         Budget budget = new Budget();
         budget.setAmount(amount);
         budget.setMonth(month);
