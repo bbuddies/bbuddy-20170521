@@ -106,6 +106,7 @@ public class BudgetControllerTest {
         budget.setMonth("2017-12");
         budget.setAmount(3100);
 
-        return controller.getBudgetInDate(startDate, endDate, budget);
+        BigDecimal total = BigDecimal.ZERO;
+        return controller.getBudgetInDate(total, startDate, endDate, budget);
     }
 }

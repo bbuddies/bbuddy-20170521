@@ -11,13 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("budgets")
@@ -60,23 +56,25 @@ public class BudgetController {
         List<Budget> budgets = this.budgets.getAll();
 
         for (Budget budget : budgets) {
-            total = getBudgetInDate(startDate, endDate, budget);
+            total = getBudgetInDate(total, startDate, endDate, budget);
         }
 
         total.setScale(0, BigDecimal.ROUND_HALF_UP);
         modelAndView.getModel()
                     .put("total", total.toString());
+        modelAndView.getModel()
+                    .put("DateRange", startDate + "~" + endDate);
         return modelAndView;
     }
 
-    public BigDecimal getBudgetInDate(String startDate,
+    public BigDecimal getBudgetInDate(BigDecimal total,
+                                      String startDate,
                                       String endDate,
                                       Budget budget) throws ParseException {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         format1.setLenient(false);
         Calendar c = Calendar.getInstance();
 
-        BigDecimal total = new BigDecimal(0);
         String month = budget.getMonth() + "-01"; // 2017-12
         Integer amount = budget.getAmount();
 
