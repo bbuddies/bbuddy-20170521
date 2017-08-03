@@ -18,25 +18,25 @@ public class BudgetControllerTest {
 
     @Test
     public void save_budget() throws Exception {
-        Budget budget = new Budget();
-        budget.setMonth("2017-08");
-        budget.setAmount(1000);
-
-        controller.save(budget);
-
+        Budget budget = saveBudget("2017-08");
         verify(budgets).save(budget);
     }
 
-    @Test
+    @Testadd budget refactoring
     public void save_budget_with_wrong_month() throws Exception {
-        Budget budget = new Budget();
-        budget.setMonth("2017/08");
-        budget.setAmount(1000);
-
-        controller.save(budget);
+        String wrongMonth = "2017/08";
+        Budget budget = saveBudget(wrongMonth);
 
         Mockito.verify(budgets, times(0))
                .save(budget);
+    }
+
+    private Budget saveBudget(String month) {
+        Budget budget = new Budget();
+        budget.setMonth(month);
+        budget.setAmount(1000);
+        controller.save(budget);
+        return budget;
     }
 
     @Test
