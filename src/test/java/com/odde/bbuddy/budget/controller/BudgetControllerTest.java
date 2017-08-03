@@ -3,7 +3,6 @@ package com.odde.bbuddy.budget.controller;
 import com.odde.bbuddy.budget.domain.Budgets;
 import com.odde.bbuddy.budget.repo.Budget;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
@@ -36,7 +35,7 @@ public class BudgetControllerTest {
         assertTrue(mav.getModel().containsKey("monthErrMsg"));
         assertTrue(mav.getModel().containsKey("amountErrMsg"));
 
-        verify(budgets, times(0)).save(budget);
+        verify(budgets, never()).save(budget);
     }
 
     private Budget saveBudget(String month,
