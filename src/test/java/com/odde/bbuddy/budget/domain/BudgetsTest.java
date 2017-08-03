@@ -3,6 +3,7 @@ package com.odde.bbuddy.budget.domain;
 import com.odde.bbuddy.budget.repo.Budget;
 import com.odde.bbuddy.budget.repo.BudgetRepo;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,18 +40,24 @@ public class BudgetsTest {
 
     @Test
     public void update_by_repo() {
-        String month = "2017-10";
-        int oldAmount = 10000;
-        Budget oldBudget = budget(month, oldAmount);
-        when(repo.findByMonth(month)).thenReturn(oldBudget);
         int newAmount = 4000;
-        Budget newBudget = budget(month, newAmount);
+        String month = "2017-10";
+        Long id = 1L;
+        when(repo.findByMonth(month)).thenReturn(
+                existedBudget(id, month, 10000));
 
-        budgets.save(newBudget);
+        budgets.save(budget(month, newAmount));
 
-        verify(repo).findByMonth(month);
-        verify(repo).save(oldBudget);
-        assertThat(oldBudget.getAmount()).isEqualTo(newAmount);
+        ArgumentCaptor<Budget> captor = ArgumentCaptor.forClass(Budget.class);
+        verify(repo).save(captor.capture());
+        assertThat(captor.getValue().getId()).isEqualTo(id);
+        assertThat(captor.getValue().getAmount()).isEqualTo(newAmount);
+    }
+
+    private Budget existedBudget(Long id, String month, int oldAmount) {
+        Budget budget = budget(month, oldAmount);
+        budget.setId(id);
+        return budget;
     }
 
     private List<Budget> givenBudgets(Budget... budget) {
