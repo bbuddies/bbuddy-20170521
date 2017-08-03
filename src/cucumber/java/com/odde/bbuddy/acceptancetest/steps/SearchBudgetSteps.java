@@ -43,6 +43,6 @@ public class SearchBudgetSteps {
 
     @Then("^total budget is (\\d+)$")
     public void total_budget_is(int total) throws Throwable {
-        driver.waitForTextPresent(String.valueOf(total));
+        driver.waitForTextPresent("total amount : " + String.valueOf(total));
     }
 }

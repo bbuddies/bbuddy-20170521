@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("budgets")
@@ -52,10 +52,41 @@ public class BudgetController {
 
     @PostMapping("search")
     public ModelAndView search(String startDate,
-                               String endDate) {
+                               String endDate) throws ParseException {
         ModelAndView modelAndView = getModelAndView("budgets/search");
+
+        double total = 0;
+        List<Budget> budgets = this.budgets.getAll();
+
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        format1.setLenient(false);
+        Calendar c = Calendar.getInstance();
+
+        for (Budget budget : budgets) {
+            String month = budget.getMonth() + "-01"; // 2017-12
+            Integer amount = budget.getAmount();
+
+            Date monthStart = format1.parse(month);
+            c.setTime(monthStart);
+
+            Date start = format1.parse(startDate);
+            Date end = format1.parse(endDate);
+
+            int lastDate = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+            Double avgAmount = amount * 1d / lastDate;
+
+            for (int i = 0; i < lastDate; i++) {
+                Date date = c.getTime();
+
+                if (start.equals(date) || end.equals(date) || (start.before(date) && date.before(end))) {
+                    total = total + avgAmount;
+                }
+                c.add(Calendar.DATE, 1);
+            }
+        }
+
         modelAndView.getModel()
-                    .put("total", 0);
+                    .put("total", Math.ceil(total));
         return modelAndView;
     }
 
@@ -67,10 +98,7 @@ public class BudgetController {
 
         List<BudgetInView> budgetsInView = new ArrayList<>();
         budgets.forEach(budget -> {
-            BudgetInView budgetInView = new BudgetInView();
-            budgetInView.setMonth(budget.getMonth());
-            DecimalFormat dt = new DecimalFormat("TWD #,###.00");
-            budgetInView.setAmount(dt.format(budget.getAmount()));
+            BudgetInView budgetInView = new BudgetInView(budget);
             budgetsInView.add(budgetInView);
         });
 
