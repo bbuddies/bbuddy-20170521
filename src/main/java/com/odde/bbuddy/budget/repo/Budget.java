@@ -29,4 +29,10 @@ public class Budget {
 
     @NotNull
     private Integer amount;
+
+    public Budget(String month,
+                  Integer amount) {
+        this.month = month;
+        this.amount = amount;
+    }
 }

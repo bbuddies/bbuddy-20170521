@@ -27,3 +27,10 @@ Feature: search budget
       | 2017-05 | 3100 |
     When search budget between '2017-04-01' and '2017-05-31'
     Then total budget is 6100
+
+  Scenario: search budget with date range 4
+    Given Then list budgets as below
+      | month   | amount       |
+      | 2017-03 | 3000 |
+    When search budget between '2017-03-01' and '2017-03-15'
+    Then total budget is 1452
