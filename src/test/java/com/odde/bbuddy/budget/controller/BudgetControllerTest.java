@@ -22,7 +22,7 @@ public class BudgetControllerTest {
         verify(budgets).save(budget);
     }
 
-    @Testadd budget refactoring
+    @Test
     public void save_budget_with_wrong_month() throws Exception {
         String wrongMonth = "2017/08";
         Budget budget = saveBudget(wrongMonth);
