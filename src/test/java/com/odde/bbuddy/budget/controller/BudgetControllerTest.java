@@ -36,7 +36,7 @@ public class BudgetControllerTest {
         assertTrue(mav.getModel().containsKey("monthErrMsg"));
         assertTrue(mav.getModel().containsKey("amountErrMsg"));
 
-        verify(budgets, times(0)).save(budget);
+        verify(budgets, never()).save(budget);
     }
 
     @Test
