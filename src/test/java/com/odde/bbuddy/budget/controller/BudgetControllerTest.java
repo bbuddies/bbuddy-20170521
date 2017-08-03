@@ -9,9 +9,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.math.BigDecimal.valueOf;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -45,21 +46,66 @@ public class BudgetControllerTest {
     }
 
     @Test
-    public void search_budget() throws Exception {
-        BigDecimal total = getTotalBudgetFromDateRange("2017-12-01", "2017-12-10");
-        assertEquals(BigDecimal.valueOf(1000), total);
+    public void start_and_end_in_same_month() throws Exception {
+        List<Budget> existingBudgets = asList(new Budget("2017-12", 3100));
+
+        assertEquals(valueOf(1000), getTotalBudgetFromDateRange("2017-12-01", "2017-12-10", existingBudgets));
     }
 
     @Test
-    public void search_budget_when_avg_amount_is_float() throws Exception {
-        BigDecimal total = getTotalBudgetFromDateRange("2017-03-01", "2017-03-15");
-        assertEquals(BigDecimal.valueOf(1452), total);
+    public void start_and_end_in_two_continuous_months() throws Exception {
+        List<Budget> existingBudgets = asList(
+                new Budget("2017-03", 3100),
+                new Budget("2017-04", 3000));
+
+        assertEquals(valueOf(3100), getTotalBudgetFromDateRange("2017-03-16", "2017-04-15", existingBudgets));
+    }
+
+    @Test
+    public void start_and_end_in_multiple_continuous_months() throws Exception {
+        List<Budget> existingBudgets = asList(
+                new Budget("2017-03", 3100),
+                new Budget("2017-04", 3000),
+                new Budget("2017-05", 3100),
+                new Budget("2017-06", 3000));
+
+        assertEquals(valueOf(8100), getTotalBudgetFromDateRange("2017-03-22", "2017-06-10", existingBudgets));
+    }
+
+    @Test
+    public void start_not_in_budget_month() throws Exception {
+        List<Budget> existingBudgets = asList(
+                new Budget("2017-03", 3100));
+
+        assertEquals(valueOf(1000), getTotalBudgetFromDateRange("2017-02-22", "2017-03-10", existingBudgets));
+    }
+
+    @Test
+    public void end_not_in_budget_month() throws Exception {
+        List<Budget> existingBudgets = asList(
+                new Budget("2017-03", 3100));
+
+        assertEquals(valueOf(1000), getTotalBudgetFromDateRange("2017-03-22", "2017-04-01", existingBudgets));
+    }
+    
+    @Test
+    public void some_month_not_have_budget() throws ParseException {
+        List<Budget> existingBudgets = asList(
+                new Budget("2017-03", 3100),
+                new Budget("2017-05", 3100));
+
+        assertEquals(valueOf(1500), getTotalBudgetFromDateRange("2017-03-22", "2017-05-05", existingBudgets));
     }
 
     @Test
     public void search_budget_when_no_date_in_date_range() throws Exception {
-        BigDecimal total = getTotalBudgetFromDateRange("2017-11-01", "2017-11-10");
-        assertEquals(BigDecimal.valueOf(0), total);
+        BigDecimal total = getTotalBudgetFromDateRange("2017-11-01", "2017-11-10", asList(new Budget("2017-02", 2800),
+                                             new Budget("2018-02", 2800),
+                                             new Budget("2019-02", 2800),
+                                             new Budget("2020-02", 2800),
+                                             new Budget("2017-03", 3000),
+                                             new Budget("2017-12", 3100)));
+        assertEquals(valueOf(0), total);
     }
 
     @Test
@@ -102,18 +148,11 @@ public class BudgetControllerTest {
         Budget budget = new Budget();
         budget.setAmount(amount);
         budget.setMonth(month);
-        return Arrays.asList(budget);
+        return asList(budget);
     }
 
     private BigDecimal getTotalBudgetFromDateRange(String startDate,
-                                                   String endDate) throws ParseException {
-        List<Budget> budgets = Arrays.asList(new Budget("2017-02", 2800),
-                                             new Budget("2018-02", 2800),
-                                             new Budget("2019-02", 2800),
-                                             new Budget("2020-02", 2800),
-                                             new Budget("2017-03", 3000),
-                                             new Budget("2017-12", 3100));
-
+                                                   String endDate, List<Budget> budgets) throws ParseException {
         return controller.getBudgetInDate(startDate, endDate, budgets);
     }
 }
