@@ -1,7 +1,9 @@
 package com.odde.bbuddy.acceptancetest.steps;
 
 import com.odde.bbuddy.acceptancetest.data.EditableBudget;
+import com.odde.bbuddy.acceptancetest.data.budget.BudgetRepoForTest;
 import com.odde.bbuddy.acceptancetest.driver.UiDriver;
+import com.odde.bbuddy.budget.repo.Budget;
 import com.odde.bbuddy.budget.repo.BudgetRepo;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -19,7 +21,7 @@ public class BudgetListSteps {
     UiDriver driver;
 
     @Autowired
-    BudgetRepo repo;
+    BudgetRepoForTest repo;
 
     @When("^add a budget of month '(.+)' with amount (\\d+)$")
     public void add_a_budget_of_month_with_amount(String month, int amount) throws Throwable {
@@ -42,7 +44,7 @@ public class BudgetListSteps {
 
     @Given("^exist a budget of month '(.+)' with amount (\\d+)$")
     public void exist_a_budget_of_month_with_amount(String month, int amount) throws Throwable {
-        repo.save(new com.odde.bbuddy.budget.repo.Budget(1, month, amount));
+        repo.save(new Budget(1, month, amount));
     }
 
     @Then("^list doesn't include a budget of month '(.+)' with amount (\\d+)$")
