@@ -7,7 +7,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -42,7 +45,23 @@ public class BudgetControllerTest {
         verify(budgets, never()).save(budget);
     }
 
-    @Test @Ignore
+    @Test
+    public void search_budget() throws Exception {
+        BigDecimal total;
+
+        String startDate = "2017-12-01";
+        String endDate = "2017-12-01";
+
+        Budget budget = new Budget();
+        budget.setMonth("2017-12");
+        budget.setAmount(3100);
+
+        total = controller.getBudgetInDate(startDate, endDate, budget);
+        assertEquals(BigDecimal.valueOf(100.0), total);
+    }
+
+    @Test
+    @Ignore
     public void get_budgets_list() throws Exception {
 
         when(budgets.getAll()).thenReturn(budgets(1000, "2017-10"));
