@@ -53,6 +53,10 @@ public class BudgetController {
         modelAndView.getModel()
                     .put("total", total.toString());
         modelAndView.getModel()
+                    .put("startDate", startDate);
+        modelAndView.getModel()
+                    .put("endDate", endDate);
+        modelAndView.getModel()
                     .put("DateRange", startDate + "~" + endDate);
         return modelAndView;
     }
