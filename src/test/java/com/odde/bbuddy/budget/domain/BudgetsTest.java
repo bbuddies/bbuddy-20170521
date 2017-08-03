@@ -7,7 +7,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,6 +35,22 @@ public class BudgetsTest {
         List<Budget> allBudgets = budgets.getAll();
 
         assertEquals(budgetList, allBudgets);
+    }
+
+    @Test
+    public void update_by_repo() {
+        String month = "2017-10";
+        int oldAmount = 10000;
+        Budget oldBudget = budget(month, oldAmount);
+        when(repo.findByMonth(month)).thenReturn(oldBudget);
+        int newAmount = 4000;
+        Budget newBudget = budget(month, newAmount);
+
+        budgets.save(newBudget);
+
+        verify(repo).findByMonth(month);
+        verify(repo).save(oldBudget);
+        assertThat(oldBudget.getAmount()).isEqualTo(newAmount);
     }
 
     private List<Budget> givenBudgets(Budget... budget) {

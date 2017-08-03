@@ -10,4 +10,6 @@ public interface BudgetRepo extends Repository<Budget, Long> {
     void save(Budget budget);
 
     List<Budget> findAll();
+
+    Budget findByMonth(String month);
 }
