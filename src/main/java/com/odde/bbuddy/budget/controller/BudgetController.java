@@ -18,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @Controller
 @RequestMapping("budgets")
 public class BudgetController {
@@ -35,6 +34,11 @@ public class BudgetController {
         return "budgets/add";
     }
 
+    @GetMapping("search")
+    public String search() {
+        return "budgets/search";
+    }
+
     @PostMapping("add")
     public ModelAndView save(Budget budget) {
         Map<String, String> errMSg = checkBudgetErr(budget);
@@ -46,6 +50,15 @@ public class BudgetController {
         return getModelAndView("redirect:/budgets");
     }
 
+    @PostMapping("search")
+    public ModelAndView search(String startDate,
+                               String endDate) {
+        ModelAndView modelAndView = getModelAndView("budgets/search");
+        modelAndView.getModel()
+                    .put("total", 0);
+        return modelAndView;
+    }
+
     @GetMapping
     public ModelAndView index() {
         ModelAndView modelAndView = getModelAndView("budgets/index");
@@ -54,14 +67,15 @@ public class BudgetController {
 
         List<BudgetInView> budgetsInView = new ArrayList<>();
         budgets.forEach(budget -> {
-                    BudgetInView budgetInView = new BudgetInView();
-                    budgetInView.setMonth(budget.getMonth());
-                    DecimalFormat dt = new DecimalFormat("TWD #,###.00");
-                    budgetInView.setAmount(dt.format(budget.getAmount()));
-                    budgetsInView.add(budgetInView);
-                });
+            BudgetInView budgetInView = new BudgetInView();
+            budgetInView.setMonth(budget.getMonth());
+            DecimalFormat dt = new DecimalFormat("TWD #,###.00");
+            budgetInView.setAmount(dt.format(budget.getAmount()));
+            budgetsInView.add(budgetInView);
+        });
 
-        modelAndView.getModel().put("budgets", budgetsInView);
+        modelAndView.getModel()
+                    .put("budgets", budgetsInView);
 
         return modelAndView;
     }
@@ -91,7 +105,6 @@ public class BudgetController {
         modelAndView.setViewName(viewName);
         return modelAndView;
     }
-
 
     private ModelAndView modelAndViewWithError(Map<String, String> errMSg) {
         ModelAndView modelAndView = getModelAndView("budgets/add");

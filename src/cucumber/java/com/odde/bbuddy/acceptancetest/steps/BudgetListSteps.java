@@ -5,7 +5,6 @@ import com.odde.bbuddy.acceptancetest.data.Messages;
 import com.odde.bbuddy.acceptancetest.data.budget.BudgetRepoForTest;
 import com.odde.bbuddy.acceptancetest.driver.UiDriver;
 import com.odde.bbuddy.budget.repo.Budget;
-import com.odde.bbuddy.budget.repo.BudgetRepo;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 public class BudgetListSteps {
@@ -39,7 +37,7 @@ public class BudgetListSteps {
     @Then("^list budgets as below$")
     public void list_budgets_as_below(List<EditableBudget> budgets) throws Throwable {
         driver.waitForTextPresent(budgets.get(0).month);
-        driver.waitForTextPresent(budgets.get(0).amount);
+        driver.waitForTextPresent(String.valueOf(budgets.get(0).amount));
     }
 
     @Given("^exist a budget of month '(.+)' with amount (\\d+)$")
