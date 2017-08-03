@@ -2,8 +2,8 @@ package com.odde.bbuddy.budget.controller;
 
 import com.odde.bbuddy.budget.domain.Budgets;
 import com.odde.bbuddy.budget.repo.Budget;
+import com.odde.bbuddy.budget.view.BudgetInView;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
@@ -39,6 +39,20 @@ public class BudgetControllerTest {
         verify(budgets, times(0)).save(budget);
     }
 
+    @Test
+    public void get_budgets_list() throws Exception {
+
+        when(budgets.getAll()).thenReturn(Budgets(1000, "2017-10"));
+        BudgetInView budgetsInView = BudgetsInView("TWD 1,000.00", "2017-10");
+
+        ModelAndView result = controller.index();
+
+        assertEquals("budgets/index", result.getViewName());
+        BudgetInView  actualBudgetInView = ((List<BudgetInView>) result.getModel().get("budgets")).get(0);
+        assertEquals(budgetsInView.getAmount(), actualBudgetInView.getAmount());
+        assertEquals(budgetsInView.getMonth(), actualBudgetInView.getMonth());
+    }
+
     private Budget saveBudget(String month,
                               int amount) {
         Budget budget = new Budget();
@@ -47,16 +61,17 @@ public class BudgetControllerTest {
         return budget;
     }
 
-    @Test
-    public void get_budgets_list() throws Exception {
-        List<Budget> budgetList = Arrays.asList(new Budget());
-        when(budgets.getAll()).thenReturn(budgetList);
+    private BudgetInView BudgetsInView(String amount, String month) {
+        BudgetInView budgetInView = new BudgetInView();
+        budgetInView.setAmount(amount);
+        budgetInView.setMonth(month);
+        return budgetInView;
+    }
 
-        ModelAndView result = controller.index();
-
-        assertEquals("budgets/index", result.getViewName());
-        assertEquals(budgetList,
-                     result.getModel()
-                           .get("budgets"));
+    private List<Budget> Budgets(int amount, String month) {
+        Budget budget = new Budget();
+        budget.setAmount(amount);
+        budget.setMonth(month);
+        return Arrays.asList(budget);
     }
 }

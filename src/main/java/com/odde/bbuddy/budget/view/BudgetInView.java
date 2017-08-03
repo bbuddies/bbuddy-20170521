@@ -8,7 +8,15 @@ public class BudgetInView {
         this.month = month;
     }
 
+    public String getMonth(){
+        return month;
+    }
+
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getAmount(){
+        return amount;
     }
 }
