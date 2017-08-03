@@ -32,15 +32,13 @@ public class BudgetController {
 
     @PostMapping("add")
     public ModelAndView save(Budget budget) {
-
         Map<String, String> errMSg = checkBudgetErr(budget);
-
         if (!errMSg.isEmpty()) {
             return modelAndViewWithError(errMSg);
         }
 
         budgets.save(budget);
-        return getModelAndView("budgets/index");
+        return getModelAndView("redirect:/budgets");
     }
 
     @GetMapping
