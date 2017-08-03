@@ -31,11 +31,6 @@ public class BudgetController {
         return "budgets/add";
     }
 
-    @GetMapping("search")
-    public String search() {
-        return "budgets/search";
-    }
-
     @PostMapping("add")
     public ModelAndView save(Budget budget) {
         Map<String, String> errMSg = checkBudgetErr(budget);
@@ -47,10 +42,10 @@ public class BudgetController {
         return getModelAndView("redirect:/budgets");
     }
 
-    @PostMapping("search")
+    @PostMapping
     public ModelAndView search(String startDate,
                                String endDate) throws ParseException {
-        ModelAndView modelAndView = getModelAndView("budgets/search");
+        ModelAndView modelAndView = getIndex();
 
         BigDecimal total = new BigDecimal(0);
         List<Budget> budgets = this.budgets.getAll();
@@ -101,6 +96,12 @@ public class BudgetController {
 
     @GetMapping
     public ModelAndView index() {
+        ModelAndView modelAndView = getIndex();
+
+        return modelAndView;
+    }
+
+    private ModelAndView getIndex() {
         ModelAndView modelAndView = getModelAndView("budgets/index");
 
         List<Budget> budgets = this.budgets.getAll();
@@ -113,7 +114,6 @@ public class BudgetController {
 
         modelAndView.getModel()
                     .put("budgets", budgetsInView);
-
         return modelAndView;
     }
 

@@ -35,7 +35,7 @@ public class SearchBudgetSteps {
     @When("^search budget between '(.+)' and '(.+)'$")
     public void search_budget_between_and(String startDate,
                                           String endDate) throws Throwable {
-        driver.navigateTo("/budgets/search");
+        driver.navigateTo("/budgets");
         driver.inputTextByName(startDate, "startDate");
         driver.inputTextByName(endDate, "endDate");
         driver.clickByText("Search");
