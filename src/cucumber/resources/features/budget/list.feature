@@ -1,4 +1,4 @@
-@user
+@user @budget
 Feature: Budget
 
   Scenario: Add a budget
