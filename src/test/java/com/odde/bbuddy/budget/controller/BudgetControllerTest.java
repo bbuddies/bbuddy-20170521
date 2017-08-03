@@ -23,7 +23,7 @@ public class BudgetControllerTest {
     }
 
     @Test
-    public void save_budget_with_wrong_month() throws Exception {
+    public void save_budget_with_wrong_format_month() throws Exception {
         String wrongMonth = "2017/08";
         Budget budget = saveBudget(wrongMonth);
 

@@ -40,6 +40,11 @@ public class ErrorMessageSteps {
         assertErrorMessageEquals(field, messages.negativeNumber());
     }
 
+    @Then("^there is an error message for number ([^\"]*) should be larger than or equal to (\\d+)$")
+    public void there_is_an_error_message_for_number_should_large_then(String field, int num) throws Throwable {
+        assertErrorMessageEquals(field, messages.minNumber(num));
+    }
+
     private void assertErrorMessageEquals(String field, String errorMessageTemplate) {
         assertThat(commonPage.getAllText()).containsIgnoringCase(errorMessageWith(field, errorMessageTemplate));
     }
