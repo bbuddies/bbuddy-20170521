@@ -1,6 +1,6 @@
 package com.odde.bbuddy.acceptancetest.data;
 
-public class Budget {
+public class EditableBudget {
     public String month;
     public String amount;
 }

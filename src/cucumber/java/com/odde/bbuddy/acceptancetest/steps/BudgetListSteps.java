@@ -1,6 +1,6 @@
 package com.odde.bbuddy.acceptancetest.steps;
 
-import com.odde.bbuddy.acceptancetest.data.Budget;
+import com.odde.bbuddy.acceptancetest.data.EditableBudget;
 import com.odde.bbuddy.acceptancetest.driver.UiDriver;
 import com.odde.bbuddy.budget.repo.BudgetRepo;
 import cucumber.api.java.en.Given;
@@ -30,7 +30,7 @@ public class BudgetListSteps {
     }
 
     @Then("^list budgets as below$")
-    public void list_budgets_as_below(List<Budget> budgets) throws Throwable {
+    public void list_budgets_as_below(List<EditableBudget> budgets) throws Throwable {
         driver.waitForTextPresent(budgets.get(0).month);
         driver.waitForTextPresent(budgets.get(0).amount);
     }
