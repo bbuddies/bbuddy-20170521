@@ -13,6 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("budgets")
@@ -26,46 +31,73 @@ public class BudgetController {
     }
 
     @GetMapping("add")
-    public String add(){
+    public String add() {
         return "budgets/add";
     }
 
     @PostMapping("add")
-    public ModelAndView save(Budget budget){
-        ModelAndView modelAndView = new ModelAndView();
-        String month = budget.getMonth();
-
-        // YYYY-MM
-        if (!month.matches("\\d{4}-\\d{2}")) {
-            modelAndView.setViewName("budgets/add");
-            modelAndView.getModel().put("errorMessage", "input wrong");
-            return modelAndView;
+    public ModelAndView save(Budget budget) {
+        Map<String, String> errMSg = checkBudgetErr(budget);
+        if (!errMSg.isEmpty()) {
+            return modelAndViewWithError(errMSg);
         }
 
         budgets.save(budget);
-        modelAndView.setViewName("budgets/index");
-        modelAndView.getModel().put("budgets", budgets.getAll());
-
-        return modelAndView;
+        return getModelAndView("redirect:/budgets");
     }
 
     @GetMapping
-    public ModelAndView index(){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("budgets/index");
+    public ModelAndView index() {
+        ModelAndView modelAndView = getModelAndView("budgets/index");
 
         List<Budget> budgets = this.budgets.getAll();
 
         List<BudgetInView> budgetsInView = new ArrayList<>();
         budgets.forEach(budget -> {
-            BudgetInView budgetInView = new BudgetInView();
-            budgetInView.setMonth(budget.getMonth());
-            DecimalFormat dt = new DecimalFormat("TWD #,###.00");
-            budgetInView.setAmount(dt.format(budget.getAmount()));
-            budgetsInView.add(budgetInView);
-        });
+                    BudgetInView budgetInView = new BudgetInView();
+                    budgetInView.setMonth(budget.getMonth());
+                    DecimalFormat dt = new DecimalFormat("TWD #,###.00");
+                    budgetInView.setAmount(dt.format(budget.getAmount()));
+                    budgetsInView.add(budgetInView);
+                });
 
         modelAndView.getModel().put("budgets", budgetsInView);
+
         return modelAndView;
     }
+
+    private Map<String, String> checkBudgetErr(Budget budget) {
+        Map<String, String> errMSg = new HashMap<>();
+        String month = budget.getMonth();
+        Integer amount = budget.getAmount();
+
+        // YYYY-MM
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM");
+        format1.setLenient(false);
+        try {
+            format1.parse(month);
+        } catch (ParseException e) {
+            errMSg.put("monthErrMsg", "month should be a valid date");
+        }
+
+        if (amount <= 0) {
+            errMSg.put("amountErrMsg", "amount should be larger than or equal to 1");
+        }
+        return errMSg;
+    }
+
+    private ModelAndView getModelAndView(String viewName) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(viewName);
+        return modelAndView;
+    }
+
+
+    private ModelAndView modelAndViewWithError(Map<String, String> errMSg) {
+        ModelAndView modelAndView = getModelAndView("budgets/add");
+        errMSg.forEach((k, v) -> modelAndView.getModel()
+                                             .put(k, v));
+        return modelAndView;
+    }
+
 }

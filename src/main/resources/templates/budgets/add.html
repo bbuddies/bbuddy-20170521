@@ -1,8 +1,15 @@
 <div>{{message}}</div>
+<style>
+    .error {
+        color : red
+    }
+
+</style>
 <form style="max-width: 330px;" method="post">
-    <div><label>Month</label><input type="text" name="month" class="form-control"/></div>
-    <div><label>Amount</label><input type="text" name="amount" class="form-control"/></div>
+    <div><label>Month</label> <span class="error">{{monthErrMsg}}</span>
+        <input type="text" name="month" class="form-control"/></div>
+    <div><label>Amount</label> <span class="error">{{amountErrMsg}}</span>
+        <input type="number" name="amount" class="form-control"/></div>
     <hr/>
-    <h3>{{errorMessage}}</h3>
     <div><input type="submit" value="Save" class="btn btn-lg btn-primary btn-block"/></div>
 </form>

@@ -13,10 +13,7 @@ import static com.odde.bbuddy.common.view.MessageSources.VALIDATION_MESSAGE_FULL
 
 @Component
 @Scope("cucumber-glue")
-@PropertySources({
-        @PropertySource(VALIDATION_MESSAGE_FULL_NAME),
-        @PropertySource(BINDING_ERROR_MESSAGE_FULL_NAME),
-})
+@PropertySources({@PropertySource(VALIDATION_MESSAGE_FULL_NAME), @PropertySource(BINDING_ERROR_MESSAGE_FULL_NAME),})
 public class Messages {
 
     @Value("${org.hibernate.validator.constraints.NotBlank.message}")
@@ -45,5 +42,9 @@ public class Messages {
 
     public String negativeNumber() {
         return minNumberMessage.replace("{value}", "0");
+    }
+
+    public String minNumber(int i) {
+        return minNumberMessage.replace("{value}", String.valueOf(i));
     }
 }
