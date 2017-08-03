@@ -2,6 +2,7 @@ package com.odde.bbuddy.budget.controller;
 
 import com.odde.bbuddy.budget.domain.Budgets;
 import com.odde.bbuddy.budget.repo.Budget;
+import com.odde.bbuddy.budget.view.BudgetInView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +54,18 @@ public class BudgetController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("budgets/index");
 
-        modelAndView.getModel().put("budgets", budgets.getAll());
+        List<Budget> budgets = this.budgets.getAll();
+
+        List<BudgetInView> budgetsInView = new ArrayList<>();
+        budgets.forEach(budget -> {
+            BudgetInView budgetInView = new BudgetInView();
+            budgetInView.setMonth(budget.getMonth());
+            DecimalFormat dt = new DecimalFormat("TWD #,###.00");
+            budgetInView.setAmount(dt.format(budget.getAmount()));
+            budgetsInView.add(budgetInView);
+        });
+
+        modelAndView.getModel().put("budgets", budgetsInView);
         return modelAndView;
     }
 }
