@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class BudgetControllerTest {
@@ -18,24 +19,31 @@ public class BudgetControllerTest {
 
     @Test
     public void save_budget() throws Exception {
-        Budget budget = saveBudget("2017-08");
+        Budget budget = saveBudget("2017-08", 1000);
+
+        controller.save(budget);
+
         verify(budgets).save(budget);
     }
 
     @Test
     public void save_budget_with_wrong_format_month() throws Exception {
         String wrongMonth = "2017/08";
-        Budget budget = saveBudget(wrongMonth);
+        Budget budget = saveBudget(wrongMonth, 0);
 
-        Mockito.verify(budgets, times(0))
-               .save(budget);
+        ModelAndView mav = controller.save(budget);
+
+        assertTrue(mav.getModel().containsKey("monthErrMsg"));
+        assertTrue(mav.getModel().containsKey("amountErrMsg"));
+
+        verify(budgets, times(0)).save(budget);
     }
 
-    private Budget saveBudget(String month) {
+    private Budget saveBudget(String month,
+                              int amount) {
         Budget budget = new Budget();
         budget.setMonth(month);
-        budget.setAmount(1000);
-        controller.save(budget);
+        budget.setAmount(amount);
         return budget;
     }
 
