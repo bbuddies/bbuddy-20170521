@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("budgets")
@@ -27,15 +29,29 @@ public class BudgetController {
     }
 
     @PostMapping("add")
-    public String save(Budget budget){
+    public ModelAndView save(Budget budget){
+        ModelAndView modelAndView = new ModelAndView();
+        String month = budget.getMonth();
+
+        // YYYY-MM
+        if (!month.matches("\\d{4}-\\d{2}")) {
+            modelAndView.setViewName("budgets/add");
+            modelAndView.getModel().put("errorMessage", "input wrong");
+            return modelAndView;
+        }
+
         budgets.save(budget);
-        return "redirect:/budgets";
+        modelAndView.setViewName("budgets/index");
+        modelAndView.getModel().put("budgets", budgets.getAll());
+
+        return modelAndView;
     }
 
     @GetMapping
     public ModelAndView index(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("budgets/index");
+
         modelAndView.getModel().put("budgets", budgets.getAll());
         return modelAndView;
     }

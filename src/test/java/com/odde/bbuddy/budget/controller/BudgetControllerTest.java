@@ -3,15 +3,14 @@ package com.odde.bbuddy.budget.controller;
 import com.odde.bbuddy.budget.domain.Budgets;
 import com.odde.bbuddy.budget.repo.Budget;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class BudgetControllerTest {
     Budgets budgets = mock(Budgets.class);
@@ -20,10 +19,24 @@ public class BudgetControllerTest {
     @Test
     public void save_budget() throws Exception {
         Budget budget = new Budget();
+        budget.setMonth("2017-08");
+        budget.setAmount(1000);
 
         controller.save(budget);
 
         verify(budgets).save(budget);
+    }
+
+    @Test
+    public void save_budget_with_wrong_month() throws Exception {
+        Budget budget = new Budget();
+        budget.setMonth("2017/08");
+        budget.setAmount(1000);
+
+        controller.save(budget);
+
+        Mockito.verify(budgets, times(0))
+               .save(budget);
     }
 
     @Test
@@ -34,6 +47,8 @@ public class BudgetControllerTest {
         ModelAndView result = controller.index();
 
         assertEquals("budgets/index", result.getViewName());
-        assertEquals(budgetList, result.getModel().get("budgets"));
+        assertEquals(budgetList,
+                     result.getModel()
+                           .get("budgets"));
     }
 }

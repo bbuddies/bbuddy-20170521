@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class BudgetListSteps {
     @Autowired
     UiDriver driver;
@@ -27,4 +29,8 @@ public class BudgetListSteps {
         driver.waitForTextPresent(budgets.get(0).amount);
     }
 
+    @Then("^add budget failed with some message$")
+    public void add_budget_failed_with_some_message() throws Throwable {
+        assertThat(driver.getAllTextInPage()).contains("input wrong");
+    }
 }
