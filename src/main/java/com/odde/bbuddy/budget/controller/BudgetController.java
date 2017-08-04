@@ -1,8 +1,10 @@
 package com.odde.bbuddy.budget.controller;
 
 import com.odde.bbuddy.budget.domain.Budgets;
+import com.odde.bbuddy.budget.domain.Period;
 import com.odde.bbuddy.budget.repo.Budget;
 import com.odde.bbuddy.budget.view.BudgetInView;
+import com.odde.bbuddy.common.Formats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,36 +66,16 @@ public class BudgetController {
     public BigDecimal getBudgetInDate(String startDate,
                                       String endDate,
                                       List<Budget> budgets) throws ParseException {
-        BigDecimal total = BigDecimal.ZERO;
+        Date start = Formats.parseDate(startDate);
+        Date end = Formats.parseDate(endDate);
 
-        for (Budget budget : budgets) {
-            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-            format1.setLenient(false);
-            Calendar c = Calendar.getInstance();
+        return getTotalAmountOfPeriod(budgets, new Period(start, end));
+    }
 
-            String month = budget.getMonth() + "-01"; // 2017-12
-            Integer amount = budget.getAmount();
-
-            Date monthStart = format1.parse(month);
-            c.setTime(monthStart);
-
-            Date start = format1.parse(startDate);
-            Date end = format1.parse(endDate);
-
-            int lastDate = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-            BigDecimal avgAmount = BigDecimal.valueOf(amount * 1d / lastDate);
-
-            for (int i = 0; i < lastDate; i++) {
-                Date date = c.getTime();
-
-                if (start.equals(date) || end.equals(date) || (start.before(date) && date.before(end))) {
-                    total = total.add(avgAmount);
-                }
-                c.add(Calendar.DATE, 1);
-            }
-        }
-
-        return total.setScale(0, BigDecimal.ROUND_HALF_UP);
+    private BigDecimal getTotalAmountOfPeriod(List<Budget> budgets, Period period) throws ParseException {
+        return BigDecimal.valueOf(budgets.stream()
+                .mapToDouble(budget -> budget.overlappingAmount(period).doubleValue())
+                .sum()).setScale(0);
     }
 
     @GetMapping

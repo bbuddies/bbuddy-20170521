@@ -32,4 +32,10 @@ public class Formats {
     public static Date dateOf(LocalDate date) {
         return from(date.atStartOfDay(systemDefault()).toInstant());
     }
+
+    public static Date parseDate(String dateString) throws ParseException {
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        format1.setLenient(false);
+        return format1.parse(dateString);
+    }
 }
